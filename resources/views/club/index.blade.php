@@ -32,9 +32,6 @@
                             <th scope="col" class="px-6 py-3">
                                 Kota/Kab
                             </th>
-                            <th scope="col" class="px-6 py-3">
-                                <span class="sr-only">#</span>
-                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -55,9 +52,6 @@
                                 </td>
                                 <td class="px-6 py-4">
                                     {{ Str::title(Http::get('https://emsifa.github.io/api-wilayah-indonesia/api/regency/' . $club->regency_id . '.json')['name']) }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    $2999
                                 </td>
                             </tr>
                         @empty
