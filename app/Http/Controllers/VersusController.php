@@ -81,18 +81,22 @@ class VersusController extends Controller
                     $standings->points = $standings->points + 3;
                     $standings->wins = $standings->wins + 1;
                     $standings->goals_wins = $standings->goals_wins + $item['score-home'];
+                    $standings->goals_losses = $standings->goals_losses + $item['score-away'];
                     $standings->updated_at = now();
                     $standings->save();
                 } elseif ($item['score-home'] == $item['score-away']) { //jika skor home sama dengan skor away
                     $standings->playing_games = $standings->playing_games + 1;
                     $standings->points = $standings->points + 1;
                     $standings->draws = $standings->draws + 1;
+                    $standings->goals_wins = $standings->goals_wins + $item['score-home'];
+                    $standings->goals_losses = $standings->goals_losses + $item['score-away'];
                     $standings->updated_at = now();
                     $standings->save();
                 } else { //jika skor home kurang dari skor away
                     $standings->playing_games = $standings->playing_games + 1;
                     $standings->losses = $standings->losses + 1;
-                    $standings->goals_losses = $standings->goals_losses + $item['score-home'];
+                    $standings->goals_wins = $standings->goals_wins + $item['score-home'];
+                    $standings->goals_losses = $standings->goals_losses + $item['score-away'];
                     $standings->updated_at = now();
                     $standings->save();
                 }
@@ -104,7 +108,7 @@ class VersusController extends Controller
                     'wins' => 1,
                     'draws' => 0,
                     'losses' => 0,
-                    'goals_losses' => 0,
+                    'goals_losses' => $item['score-away'],
                     'goals_wins' => $item['score-home'],
                     'created_at'    => now()
                 ]);
@@ -116,8 +120,8 @@ class VersusController extends Controller
                     'wins' => 0,
                     'draws' => 1,
                     'losses' => 0,
-                    'goals_losses' => 0,
-                    'goals_wins' => 0,
+                    'goals_losses' =>$item['score-away'],
+                    'goals_wins' => $item['score-home'],
                     'created_at'    => now()
                 ]);
             } else {        //jika klub belum pernah bermain, dan skor home lebih kecil dari skor away
@@ -129,7 +133,7 @@ class VersusController extends Controller
                     'draws' => 0,
                     'losses' => 1,
                     'goals_losses' => $item['score-away'],
-                    'goals_wins' => 0,
+                    'goals_wins' => $item['score-home'],
                     'created_at'    => now()
                 ]);
             }
@@ -142,23 +146,27 @@ class VersusController extends Controller
                     $standings->playing_games = $standings->playing_games + 1;
                     $standings->points = $standings->points + 3;
                     $standings->wins = $standings->wins + 1;
-                    $standings->goals_wins = $standings->goals_wins + $item['score-home'];
+                    $standings->goals_wins = $standings->goals_wins + $item['score-away'];
+                    $standings->goals_losses = $standings->goals_losses + $item['score-home'];
                     $standings->updated_at = now();
                     $standings->save();
                 } elseif ($item['score-away'] == $item['score-home']) { //jika skor away sama dengan skor home
                     $standings->playing_games = $standings->playing_games + 1;
                     $standings->points = $standings->points + 1;
                     $standings->draws = $standings->draws + 1;
+                    $standings->goals_wins = $standings->goals_wins + $item['score-away'];
+                    $standings->goals_losses = $standings->goals_losses + $item['score-home'];
                     $standings->updated_at = now();
                     $standings->save();
                 } else {    //jika skor away kurang dari skor home
                     $standings->playing_games = $standings->playing_games + 1;
                     $standings->losses = $standings->losses + 1;
+                    $standings->goals_wins = $standings->goals_wins + $item['score-away'];
                     $standings->goals_losses = $standings->goals_losses + $item['score-home'];
                     $standings->updated_at = now();
                     $standings->save();
                 }
-            } elseif ($item['score-away'] > $item['score-home']) { //jika klub belum pernah bermain, dan skor away lebih besar dari skor home
+            } elseif ($item['score-away'] > $item['score-home']) { //jika klub away belum pernah bermain, dan skor away lebih besar dari skor home
                 Standings::insert([
                     'club_id' => $item['away'],
                     'playing_games' => 1,
@@ -166,11 +174,11 @@ class VersusController extends Controller
                     'wins' => 1,
                     'draws' => 0,
                     'losses' => 0,
-                    'goals_losses' => 0,
+                    'goals_losses' => $item['score-home'],
                     'goals_wins' => $item['score-away'],
                     'created_at'    => now()
                 ]);
-            } elseif ($item['score-home'] == $item['score-away']) { //jika klub belum pernah bermain, dan skor home sama dengan dari skor away
+            } elseif ($item['score-home'] == $item['score-away']) { //jika klub away belum pernah bermain, dan skor home sama dengan dari skor away
                 Standings::insert([
                     'club_id' => $item['away'],
                     'playing_games' => 1,
@@ -178,8 +186,8 @@ class VersusController extends Controller
                     'wins' => 0,
                     'draws' => 1,
                     'losses' => 0,
-                    'goals_losses' => 0,
-                    'goals_wins' => 0,
+                    'goals_losses' => $item['score-home'],
+                    'goals_wins' => $item['score-away'],
                     'created_at'  => now()
                 ]);
             } else {        //jika klub belum pernah bermain, dan skor away kurang dari skor home
@@ -191,7 +199,7 @@ class VersusController extends Controller
                     'draws' => 0,
                     'losses' => 1,
                     'goals_losses' => $item['score-home'],
-                    'goals_wins' => 0,
+                    'goals_wins' => $item['score-away'],
                     'created_at'    => now()
                 ]);
             }
